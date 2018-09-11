@@ -4,13 +4,10 @@
   </head>
 
   <body>
-    <script>
-
-    </script>
-
+    <h1>HTML Calculator</h1>
     <div id="calc-parent">
       <div class="row">
-
+        <div class="column" id="calc-display-val">0</div>
       </div>
       <div class="row">
         <div class="calc-btn column" id="calc-clear">AC</div>
@@ -41,5 +38,114 @@
         <div class="calc-btn calc-btn-operator column" id="calc-equals">=</div>
       </div>
     </div>
+    <script>
+      var zeroBtn = document.getElementById('calc-zero');
+      var oneBtn = document.getElementById('calc-one');
+      var twoBtn = document.getElementById('calc-two');
+      var threeBtn = document.getElementById('calc-three');
+      var fourBtn = document.getElementById('calc-four');
+      var fiveBtn = document.getElementById('calc-five');
+      var sixBtn = document.getElementById('calc-six');
+      var sevenBtn = document.getElementById('calc-seven');
+      var eightBtn = document.getElementById('calc-eight');
+      var nineBtn = document.getElementById('calc-nine');
+
+      var decimalBtn = document.getElementById('calc-decimal');
+      var clearBtn = document.getElementById('calc-clear');
+      var backspaceBtn = document.getElementById('calc-backspace');
+      var displayValElement = document.getElementById('calc-display-val');
+
+      var displayVal ='0';
+      var pendingVal;
+      var evalStringArray = [];
+
+      var calcNumBtns = document.getElementsByClassName('calc-btn-num');
+      var caclOperatorBtns = document.getElementsByClassName('calc-btn-operator')
+
+      var updateDisplayVal = (clickObj) => {
+        var btnText = clickObj.target.innerText;
+
+        if (displayVal === '0')
+          displayVal = '';
+
+        displayVal += btnText;
+        displayValElement.innerText = displayVal;
+      }
+
+      var performOperation = (clickObj) => {
+        var operator = clickObj.target.innerText;
+
+        switch (operator) {
+          case '+':
+            pendingVal = displayVal;
+            displayVal = '0';
+            displayValElement.innerText = displayVal;
+            evalStringArray.push(pendingVal);
+            evalStringArray.push('+')
+            break;
+
+          case '-':
+            pendingVal = displayVal;
+            displayVal = '0';
+            displayValElement.innerText = displayVal;
+            evalStringArray.push(pendingVal);
+            evalStringArray.push('-')
+            break;
+
+          case 'x':
+            pendingVal = displayVal;
+            displayVal = '0';
+            displayValElement.innerText = displayVal;
+            evalStringArray.push(pendingVal);
+            evalStringArray.push('*')
+            break;
+          case '÷':
+            pendingVal = displayVal;
+            displayVal = '0';
+            displayValElement.innerText = displayVal;
+            evalStringArray.push(pendingVal);
+            evalStringArray.push('/')
+            break;
+          case '=':
+            evalStringArray.push(displayVal);
+            var evaluation = eval(evalStringArray.join(' '));
+            displayVal = evaluation + '';
+            displayValElement.innerText = displayVal;
+            evalStringArray = [];
+            break;
+          default:
+            break;
+        }
+      }
+
+      for (let i = 0; i < calcNumBtns.length; i++) {
+        calcNumBtns[i].addEventListener('click', updateDisplayVal, false);
+      }
+
+      for (let i = 0; i < caclOperatorBtns.length; i++) {
+        caclOperatorBtns[i].addEventListener('click', performOperation, false);
+      }
+
+      clearBtn.onclick = () => {
+        displayVal = '0';
+        pendingVal = undefined;
+        evalStringArray = [];
+        displayValElement.innerHTML = displayVal;
+      }
+      backspaceBtn.onclick = () => {
+        let lengthOfDisplayVal = displayVal.length;
+        displayVal = displayVal.slice(0,lengthOfDisplayVal-1);
+        if (displayVal === '')
+          displayVal = '0';
+        displayValElement.innerText = displayVal;
+      }
+      decimalBtn.onclick = () => {
+        if(!displayVal.includes('.')) {
+          displayVal += '.';
+          displayValElement.innerText = displayVal
+        }
+      }
+
+    </script>
   </body>
 </html>
